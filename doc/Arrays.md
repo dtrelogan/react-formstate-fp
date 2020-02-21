@@ -8,6 +8,12 @@ Since react-formstate-fp is [model first](/doc/WhyTheFpBranch.md), your JSX can 
 
 In this example, "dependents" can be added and removed on the fly.
 
+## This means model keys can change!
+
+If you remove an item from an array, a model key like 'dependents.3.email' can change to 'dependents.2.email'.
+
+This is why the handlers and validation functions are supplied an id rather than a model key.
+
 ## The parent form
 
 ```jsx
