@@ -1,0 +1,76 @@
+{
+  "name": "react-formstate-fp",
+  "version": "0.0.1",
+  "description": "An API to build, query, update, and bind formstate in React.",
+  "main": "./lib/index.js",
+  "module": "./src/index.js",
+  "files": [
+    "/lib",
+    "/src"
+  ],
+  "scripts": {
+    "build": "babel src --out-dir lib",
+    "pretest": "npm run build",
+    "localtest": "jest",
+    "prelocaltest": "npm run build",
+    "prepublishOnly": "npm run localtest"
+  },
+  "babel": {
+    "presets": [
+      [
+        "@babel/preset-env",
+        {
+          "useBuiltIns": false
+        }
+      ]
+    ],
+    "plugins": [
+      [
+        "@babel/plugin-transform-runtime",
+        {
+          "absoluteRuntime": false,
+          "corejs": false,
+          "helpers": true,
+          "regenerator": false,
+          "useESModules": false,
+          "version": "^7.7.5"
+        }
+      ]
+    ]
+  },
+  "keywords": [
+    "react",
+    "form",
+    "forms",
+    "async",
+    "asynchronous",
+    "validation",
+    "formstate",
+    "state"
+  ],
+  "author": "Daniel Trelogan",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dtrelogan/react-formstate-fp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dtrelogan/react-formstate-fp/issues"
+  },
+  "homepage": "https://github.com/dtrelogan/react-formstate-fp#readme",
+  "peerDependencies": {
+    "react": ">=16.8.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.7.5",
+    "@babel/core": "^7.7.5",
+    "@babel/plugin-transform-runtime": "^7.7.5",
+    "@babel/preset-env": "^7.7.5",
+    "eslint": "^6.8.0",
+    "jest": "^25.1.0",
+    "react": "^16.12.0"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.7.5"
+  }
+}
