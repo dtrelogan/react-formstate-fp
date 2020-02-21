@@ -66,7 +66,7 @@ export default function Dependents({model})
     });
   }
 
-  // Combining FormScope 'dependents' with FormScope 'i' above will put the nested form in scope 'depenents.i'
+  // Combining FormScope 'dependents' with FormScope 'i' above will put the nested form in scope 'dependents.i'
 
   return (
     <form onSubmit={e => submit(e, form)}>

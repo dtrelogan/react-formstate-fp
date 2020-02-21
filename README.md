@@ -6,7 +6,7 @@ An API to build, query, update, and bind formstate in React.
 
 With react-formstate-fp, and your choice of input components, you can assemble forms DRYly in React.
 
-## It solves the right problem to solve for React forms
+### It solves the right problem to solve for React forms
 
 By focusing on your form's data, and keeping you in control of your form's behavior, react-formstate-fp eliminates the busy work involved with React forms, without limiting you or getting in your way.
 
@@ -14,6 +14,7 @@ By focusing on your form's data, and keeping you in control of your form's behav
 
 - [Basic example](/doc/BasicExample.md)
 - [Why the departure from react-formstate?](/doc/WhyTheFpBranch.md)
+- [Initialization](/doc/Initialization.md)
 - [Binding inputs to formstate](/doc/Binding.md)
 - [Synchronous validation](/doc/Validation.md)
 - [Asynchronous validation](/doc/AsynchronousValidation.md)
@@ -22,7 +23,6 @@ By focusing on your form's data, and keeping you in control of your form's behav
 - [Nested forms](/doc/NestedForms.md)
 - [Arrays, addModelKey, deleteModelKey](/doc/Arrays.md)
 - [useFormstate and bindToSetStateComponent](/doc/useFormstate.md)
-- [Initialization cheat sheet](/doc/Initialization.md)
 - [API index](/doc/ApiIndex.md)
 
 ### Dependencies
