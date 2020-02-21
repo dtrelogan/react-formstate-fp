@@ -40,7 +40,7 @@ export function primeOnChangeThenBlur(formstate, modelKey) {
 
 ```
 
-Strategies for binding include:
+# Strategies for binding include:
 
 ## Inline
 
@@ -100,7 +100,9 @@ function generateInputProps(type, formstate, modelKey, form) {
   }
   // else ...
 }
+```
 
+```es6
 function generateFeedbackProps(formstate, modelKey) {
   const primed = rff.primeOnChange(formstate, modelKey);
 
@@ -144,7 +146,9 @@ function FormGroup({formstate, modelKey, form, children, ...other}) {
     </Form.Group>
   );
 }
+```
 
+```jsx
 function Input({type, formstate, modelKey, form, handleChange, handleBlur, ...other}) {
   const id = rff.getId(formstate, modelKey);
   const primed = rff.primeOnChange(formstate, modelKey);
@@ -165,7 +169,9 @@ function Input({type, formstate, modelKey, form, handleChange, handleBlur, ...ot
   }
   // else ...
 }
+```
 
+```jsx
 function Feedback({formstate, modelKey, form, ...other}) {
   const primed = rff.primeOnChange(formstate, modelKey);
 
