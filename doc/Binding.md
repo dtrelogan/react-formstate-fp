@@ -48,7 +48,7 @@ The brute force approach... This is what most people think they want but I don't
 
 ```jsx
 <Form>
-  <Form.Group controlId='username'/>
+  <Form.Group controlId='username'>
     <Form.Label>Username</Form.Label>
     <Form.Control
       type='text'
@@ -72,7 +72,7 @@ Better, but still not the best choice imo.
 
 ```jsx
 <Form>
-  <Form.Group controlId='username'/>
+  <Form.Group controlId='username'>
     <Form.Label>Username</Form.Label>
     <Form.Control {...generateInputProps('text', formstate, 'username', form)}/>
     <Form.Control.Feedback {...generateFeedbackProps(formstate, 'username')}>
@@ -129,7 +129,7 @@ function modelKey(modelKey) {
 
 return (
   <Form>
-    <FormGroup {...modelKey('address.line1')}/>
+    <FormGroup {...modelKey('address.line1')}>
       <Form.Label>Street Address Line 1</Form.Label>
       <Input type='text' {...modelKey('address.line1')}/>
       <Feedback {...modelKey('address.line1')}/>
@@ -203,7 +203,7 @@ return (
   <Form>
     <FormScope name='address'>
       <FormField name='line1'>
-        <FormGroup/>
+        <FormGroup>
           <Form.Label>Street Address Line 1</Form.Label>
           <Input type='text'/>
           <Feedback/>

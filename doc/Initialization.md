@@ -2,37 +2,6 @@
 
 initializeFormstate is the only initialization function.
 
-## Important takeaways
-
-These snippets are clarified below.
-
-```es6
-// required: 'E-mail is required',  // You can tailor the message if you want.
-// validateAsync: [verifyUniqueUsername, 'onBlur']  // Field-level validateAsync: onChange, onBlur, or onSubmit
-// '': { validateAsync: verifyAddress }  // Scope-level validateAsync always runs onSubmit.
-// fields: { 'multiselectValues': {} } // Don't drill into the multi-select values.
-// schemaForEach: addressValidationSchema  // 'schemaForEach' is an important tool for schema composition.
-// 'homeContactInfo.address': { schema: addressValidationSchema }  // 'schema' is an important tool for composition.
-```
-
-```es6
-// Composing the initial model
-
-const initialModel = {
-  homeContactInfo: {
-    email: '',
-    address: addressInitialModel
-  }
-};
-
-// Editing an existing model.
-
-export default function ExampleForm({model})
-{
-  const [formstate, setFormstate] = useState(() => rff.initializeFormstate(model || initialModel), validationSchema);
-}
-```
-
 ## Basic example
 
 ```es6

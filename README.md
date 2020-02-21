@@ -22,7 +22,7 @@ By focusing on your form's data, and keeping you in control of your form's behav
 - [Nested forms](/doc/NestedForms.md)
 - [Arrays, addModelKey, deleteModelKey](/doc/Arrays.md)
 - [useFormstate and bindToSetStateComponent](/doc/useFormstate.md)
-- [Initialization cheat sheet](/doc/api/building/Initialization.md)
+- [Initialization cheat sheet](/doc/Initialization.md)
 - [API index](/doc/ApiIndex.md)
 
 ### Dependencies

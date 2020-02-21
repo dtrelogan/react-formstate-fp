@@ -26,17 +26,20 @@ function isRequired(formstate, id, form)
 ### Querying (aggregate) form status
 
 - Validity  
+
 function isModelValid(formstate)  
 function isModelInvalid(formstate)  
 function isPrimedModelInvalid(formstate, calculatePrimed)  
 
 - Asynchronous status  
+
 function isFormWaiting(formstate)  
 function isFormAsyncError(formstate)  
 function getFormAsyncErrorModelKeys(formstate)  
 function wasAsyncErrorDuringSubmit(formstate, modelKey)  
 
 - Submission status  
+
 function isFormSubmitting(formstate)  
 function isFormSubmittedAndUnchanged(formstate)  
 function getFormSubmissionStartTime(formstate)  
@@ -48,22 +51,26 @@ function getFormSubmissionHistory(formstate)
 function wasSuccessfulSubmit(formstate)  
 
 - Other  
+
 function isInputDisabled(formstate)  
 function getFormCustomProperty(formstate, name)  
 
 ### Querying field and scope status
 
 - Synchronous/asynchronous validity  
+
 function isValid(formstate, modelKey)  
 function isInvalid(formstate, modelKey)  
 function isValidated(formstate, modelKey)  
 
 - Synchronous validity  
+
 function isSynclyValid(formstate, modelKey)  
 function isSynclyInvalid(formstate, modelKey)  
 function isSynclyValidated(formstate, modelKey)  
 
 - Asynchronous validity  
+
 function isWaiting(formstate, modelKey)  
 function isAsynclyValid(formstate, modelKey)  
 function isAsynclyInvalid(formstate, modelKey)  
@@ -74,6 +81,7 @@ function getAsyncStartTime(formstate, modelKey)
 function getAsyncEndTime(formstate, modelKey)  
 
 - Touched/Primed  
+
 function isChanged(formstate, modelKey)  
 function isBlurred(formstate, modelKey)  
 function isSubmitting(formstate, modelKey)  
@@ -84,6 +92,7 @@ function primeOnChangeThenBlur(formstate, modelKey)
 function primeOnSubmit(formstate, modelKey)  
 
 - Other  
+
 function getMessage(formstate, modelKey)  
 function getCustomProperty(formstate, modelKey, name)  
 
@@ -110,6 +119,7 @@ function setFormCustomProperty(formstate, name, value)
 ### Updating field and scope status
 
 - Synchronous validity  
+
 function setNotSynclyValidated(formstate, modelKey, message)  
 function setSynclyValid(formstate, modelKey, message)  
 function setSynclyInvalid(formstate, modelKey, message)  
@@ -118,18 +128,21 @@ function setValid(formstate, modelKey, message)
 function setInvalid(formstate, modelKey, message)  
 
 - Asynchronous validity  
+
 function setAsyncStarted(formstate, modelKey, message)  
 function setAsynclyValid(asyncToken, formstate, modelKey, message)  
 function setAsynclyInvalid(asyncToken, formstate, modelKey, message)  
 function setAsyncError(asyncToken, formstate, modelKey, error, message)  
 
 - Touched  
+
 function setChanged(formstate, modelKey)  
 function setBlurred(formstate, modelKey)  
 function setSubmitting(formstate, modelKey)  
 function setSubmitted(formstate, modelKey)  
 
 - Other  
+
 function setMessage(formstate, modelKey, message)  
 function setCustomProperty(formstate, modelKey, name, value)  
 

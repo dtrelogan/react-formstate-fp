@@ -1,7 +1,5 @@
 # Asynchronous validation
 
-react-formstate-fp's predecessor, [react-formstate](https://www.npmjs.com/package/react-formstate), did not incorporate promises into the API. Nor did it include a separate status for async validity. The thinking was that it would be simpler if it didn't. Turns out [that wasn't the case](https://github.com/dtrelogan/react-formstate/blob/HEAD/docs/asyncAlternatives.md). react-formstate-fp provides much more complete support for asynchronous validation.
-
 ## Field-level asynchronous validation
 
 ### Configuration
@@ -109,19 +107,22 @@ export function isValidated(formstate, modelKey) {
 
 You can examine each status individually if you need to:
 
-- Synchronous validity
- - function isSynclyValid(formstate, modelKey)
- - function isSynclyInvalid(formstate, modelKey)
- - function isSynclyValidated(formstate, modelKey)
-- Asynchronous validity
- - function isWaiting(formstate, modelKey)
- - function isAsynclyValid(formstate, modelKey)
- - function isAsynclyInvalid(formstate, modelKey)
- - function isAsynclyValidated(formstate, modelKey)
- - function getAsyncError(formstate, modelKey)
- - function getAsyncToken(formstate, modelKey)
- - function getAsyncStartTime(formstate, modelKey)
- - function getAsyncEndTime(formstate, modelKey)
+- Synchronous validity  
+
+function isSynclyValid(formstate, modelKey)  
+function isSynclyInvalid(formstate, modelKey)  
+function isSynclyValidated(formstate, modelKey)  
+
+- Asynchronous validity  
+
+function isWaiting(formstate, modelKey)  
+function isAsynclyValid(formstate, modelKey)  
+function isAsynclyInvalid(formstate, modelKey)  
+function isAsynclyValidated(formstate, modelKey)  
+function getAsyncError(formstate, modelKey)  
+function getAsyncToken(formstate, modelKey)  
+function getAsyncStartTime(formstate, modelKey)  
+function getAsyncEndTime(formstate, modelKey)  
 
 
 ## Form Submission
