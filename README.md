@@ -6,7 +6,7 @@ An API to build, query, update, and bind formstate in React.
 
 With react-formstate-fp, and your choice of input components, you can assemble forms DRYly in React.
 
-## It solves the right problem to solve for React forms.
+## It solves the right problem to solve for React forms
 
 By focusing on your form's data, and keeping you in control of your form's behavior, react-formstate-fp eliminates the busy work involved with React forms, without limiting you or getting in your way.
 
@@ -31,6 +31,6 @@ By focusing on your form's data, and keeping you in control of your form's behav
 - Assumes an es5 environment (for example: Object.keys and Array.isArray).
 - Assumes es6 promises. (This is the only polyfill requirement beyond es5.)
 - [@babel/runtime](https://babeljs.io/docs/en/babel-runtime) might be pulled in depending on how you build your project.
- - In the package.json see the "main" entry point for transpiled js that requires the runtime,
- - or the "module" entry point for the original es6 source code, which you can bundle as you like.
+    - In the package.json see the "main" entry point for transpiled js that requires the runtime,
+    - or the "module" entry point for the original es6 source code, which you can bundle as you like.
 - NO other dependencies.
