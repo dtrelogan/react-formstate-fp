@@ -1,15 +1,13 @@
 # Explanation through example
 
-```es6
+For code for the "InputAndFeedback" component, see the [demo](#todo). For the thinking behind it, see the [binding strategies](/doc/Binding.md) doc.
+
+```jsx
 import React, { useState } from 'react';
 import { rff, FormScope, FormField } from 'react-formstate-fp';
 import { InputAndFeedback } from '../components/rffBootstrap.jsx';
 import Spinner from '../components/Spinner.jsx';
-```
 
-For code for the "InputAndFeedback" component, see the [demo](#todo). For the thinking behind it, see the [binding strategies](/doc/Binding.md) doc.
-
-```jsx
 const initialModel = {
   oldPassword: '',
   newPassword: '',

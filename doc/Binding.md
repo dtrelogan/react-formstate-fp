@@ -4,15 +4,47 @@ react-formstate-fp can bind to plain old HTML inputs or to any form component li
 
 These examples use input components from [react-bootstrap](https://react-bootstrap.github.io).
 
+## The standard calculatePrimed functions
+
+"Primed" is different than touched. A field might be touched as in 'changed', but you might want to "prime" (i.e., provide feedback) on blur or on submit.
+
+Use these if you like, but feel free to create your own logic!
+
+```es6
+
+// (This is library source code so it doesn't prepend 'rff.' to these function calls, but if you write your own, you will need to.)
+
+export function primeOnSubmit(formstate, modelKey) {
+  if (isSubmitted(formstate, modelKey)) {return true;}
+
+  // Provide feedback about asynchronous status as soon as you have it.
+  if (isWaiting(formstate, modelKey) || isAsynclyValidated(formstate, modelKey) || getAsyncError(formstate, modelKey)) {return true;}
+
+  // Wait until async finishes to show all new synchronous validation results at same time.
+  // If you're waiting for async, this helps to reinforce the impression that the form is waiting.
+  // (Or provide your own code to do what you want.)
+  return isSubmitting(formstate, modelKey) && !isFormWaiting(formstate);
+}
+
+export function primeOnChange(formstate, modelKey) {
+  return primeOnSubmit(formstate, modelKey) || isChanged(formstate, modelKey);
+}
+
+export function primeOnBlur(formstate, modelKey) {
+  return primeOnSubmit(formstate, modelKey) || isBlurred(formstate, modelKey);
+}
+
+export function primeOnChangeThenBlur(formstate, modelKey) {
+  return primeOnSubmit(formstate, modelKey) || (isChanged(formstate, modelKey) && isBlurred(formstate, modelKey));
+}
+
+```
+
 Strategies for binding include:
 
 ## Inline
 
 The brute force approach... This is what most people think they want but I don't recommend it.
-
-(rff.primeOnChange calculates whether to show a validation message, i.e., in this example validation messages are "primed" onChange.)
-
-(rff.getId is used in the closures because if you delete items from an array, a model key like 'contacts.3.email' can change to 'contacts.2.email'. The id will stay the same.)
 
 ```jsx
 <Form>
@@ -54,9 +86,6 @@ Better, but still not the best choice imo.
 function generateInputProps(type, formstate, modelKey, form) {
   const id = rff.getId(formstate, modelKey);
   const primed = rff.primeOnChange(formstate, modelKey);
-
-  // modelKey might be relative to a nested form scope.
-  // getRootModelKey returns an absolute path.
 
   if (type === 'text' || type === 'password') {
     return {
@@ -177,38 +206,4 @@ return (
     </FormScope>
   </Form>
 );
-```
-
-## The standard calculatePrimed functions
-
-"Primed" is different than touched. A field might be touched as in 'changed', but you might want to "prime" (i.e., provide feedback) on blur or on submit.
-
-Use these if you like, but feel free to create your own logic!
-
-```es6
-
-// (This is library source code so it doesn't prepend 'rff.' to these function calls, but if you write your own, you will need to.)
-
-export function primeOnSubmit(formstate, modelKey) {
-  if (isSubmitted(formstate, modelKey)) {return true;}
-  // Provide feedback about asynchronous status as soon as you have it.
-  if (isWaiting(formstate, modelKey) || isAsynclyValidated(formstate, modelKey) || getAsyncError(formstate, modelKey)) {return true;}
-  // Wait until async finishes to show all new synchronous validation results at same time.
-  // If you're waiting for async, this helps to reinforce the impression that the form is waiting.
-  // (Or provide your own code to do what you want.)
-  return isSubmitting(formstate, modelKey) && !isFormWaiting(formstate);
-}
-
-export function primeOnChange(formstate, modelKey) {
-  return primeOnSubmit(formstate, modelKey) || isChanged(formstate, modelKey);
-}
-
-export function primeOnBlur(formstate, modelKey) {
-  return primeOnSubmit(formstate, modelKey) || isBlurred(formstate, modelKey);
-}
-
-export function primeOnChangeThenBlur(formstate, modelKey) {
-  return primeOnSubmit(formstate, modelKey) || (isChanged(formstate, modelKey) && isBlurred(formstate, modelKey));
-}
-
 ```
