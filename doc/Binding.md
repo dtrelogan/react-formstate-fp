@@ -180,7 +180,7 @@ function Feedback({formstate, modelKey, form, ...other}) {
   if (primed && rff.isInvalid(formstate, modelKey)) {type = 'invalid';}
 
   return (
-    <Form.Control.Feedback type={type}>
+    <Form.Control.Feedback type={type} {...other}>
       {rff.getMessage(formstate, modelKey)}
     </Form.Control.Feedback>
   );
