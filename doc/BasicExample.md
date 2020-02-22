@@ -1,6 +1,6 @@
 # Explanation through example
 
-For code for the "InputAndFeedback" component, see the [demo](#todo). For the thinking behind it, see the [binding strategies](/doc/Binding.md) doc.
+For code for the "InputAndFeedback" component, see the [demo](https://dtrelogan.github.io/react-formstate-fp-demo/). For the thinking behind it, see the [binding strategies](/doc/Binding.md) doc.
 
 ```jsx
 import React, { useState } from 'react';
