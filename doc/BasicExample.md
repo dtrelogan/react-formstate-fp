@@ -108,4 +108,4 @@ function submitValidModel(model, form) {
 }
 ```
 
-For a more realistic submit handler, see [submitting](/doc/Submitting.md).
+For the code for the submit handler, see [submitting](/doc/Submitting.md).
