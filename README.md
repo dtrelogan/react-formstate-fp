@@ -6,9 +6,11 @@ An API to build, query, update, and bind formstate in React.
 
 With react-formstate-fp, and your choice of input components, you can assemble forms DRYly in React.
 
-## It solves the right problem to solve for React forms
+### It solves the right problem to solve for React forms
 
 By focusing on your form's data, and keeping you in control of your form's behavior, react-formstate-fp eliminates the busy work involved with React forms, without limiting you or getting in your way.
+
+## Setup
 
 ```
 npm install --save react-formstate-fp
@@ -16,9 +18,7 @@ npm install --save react-formstate-fp
 
 ## Demo
 
-All the examples are demonstrated here:
-
-[react-formstate-fp-demo](https://dtrelogan.github.io/react-formstate-fp-demo/)
+All examples demonstrated [here](https://dtrelogan.github.io/react-formstate-fp-demo/).
 
 ## Examples and documentation
 
