@@ -14,10 +14,11 @@ const initialModel = {
   confirmNewPassword: ''
 };
 
-// You can specify validation here or you can specify it in the JSX below. Your choice...
+// You can specify validation here or you can specify it in the JSX below (like this example does).
+// Your choice...
 //
-// Validation configuration is intentionally nothing fancy,
-// it is simplest to express validation, especially client-side, through code.
+// Validation configuration is intentionally nothing fancy.
+// It is simplest to express validation, especially client-side, through code.
 //
 // const validationSchema = {
 //   fields: {

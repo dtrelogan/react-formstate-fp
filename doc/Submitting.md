@@ -37,6 +37,7 @@ function submitValidModel(model, form) {
       else {
         fs = rff.setInvalid(fs, 'oldPassword', 'Incorrect password!');
       }
+      // This is just a demo, normally both cases wouldn't do this...
       return rff.cancelFormSubmission(fs);
     });
   }).catch(err => {
@@ -53,7 +54,7 @@ function submitValidModel(model, form) {
 
 Below is the source code for driveFormSubmission.
 
-All of the functions used below are exposed in the API, so it is easy to write your own version if you want to tweak its behavior.
+All of the functions used below are exposed in the API, so it is easy to write your own handler if you want to tweak its behavior.
 
 If you want to use await when doing so, see [useFormstate](/doc/useFormstate.md).
 
