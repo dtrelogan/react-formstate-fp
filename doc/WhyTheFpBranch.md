@@ -2,7 +2,7 @@
 
 react-formstate-fp is a rewrite of [react-formstate](https://www.npmjs.com/package/react-formstate) that works cleanly with React Hooks.
 
-The rewrite also provides much better support for asynchronous validation, and corrects a significant design flaw:
+The rewrite also provides much better support for asynchronous validation, and makes a significant change to the approach:
 
 ## react-formstate is "form first"
 
@@ -103,4 +103,4 @@ It turns out, however, that this particular piece of "busy work" *adds value*. I
 
 ## Moving forward
 
-I still believe the "formstate" approach is the right one in React, so the learning that came out of react-formstate has paid dividends in the form of react-formstate-fp. react-formstate was a good library, but this one is **much**, *much* better. If you find that you agree, you can thank React hooks for breaking my original design.
+I still believe the "formstate" approach is the right one in React, so the learning that came out of react-formstate has paid dividends in the form of react-formstate-fp. react-formstate was a good library, but this one is **much**, *much* better. If you find that you agree, you can thank React hooks for the motivation.
