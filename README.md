@@ -18,7 +18,7 @@ npm install --save react-formstate-fp
 
 ## Demo
 
-All examples demonstrated [here](https://dtrelogan.github.io/react-formstate-fp-demo/).
+[All examples demonstrated here](https://dtrelogan.github.io/react-formstate-fp-demo/).
 
 ## Examples and documentation
 
