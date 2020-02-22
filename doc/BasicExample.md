@@ -101,42 +101,10 @@ function submit(e, form) {
   rff.driveFormSubmission(form, submitValidModel);
 }
 
-
 function submitValidModel(model, form) {
-
-  // Simulate sending the valid model to your server.
-
-  new Promise((resolve, reject) => {
-    window.setTimeout(() => {
-      if (model.oldPassword === 'TestThrowingAnError') {
-        reject(new Error('A timeout occurred while trying to communicate with the server.'));
-      }
-      else {
-        resolve(model.oldPassword === 'TheRightPassword');
-      }
-    }, 2000);
-  }).then(isPasswordCorrect => {
-    form.setFormstate(fs => {
-      if (isPasswordCorrect) {
-        // Normally you'd route somewhere else if the password was updated...
-        fs = rff.setValid(fs, 'oldPassword', 'Your password was changed successfully.');
-        // Alternatively you could set this in root scope and add a feedback widget
-        // for that scope. This is a valuable concept.
-        // fs = rff.setValid(fs, '', 'Your password was changed successfully.');
-      }
-      else {
-        fs = rff.setInvalid(fs, 'oldPassword', 'Incorrect password!');
-      }
-      return rff.cancelFormSubmission(fs); // Doing this in both cases because it's a demo.
-    });
-  }).catch(err => {
-    form.setFormstate(fs => {
-      fs = rff.setFormSubmissionError(fs, err);
-      // You could add feedback functionality to your form around the presence of a submission error.
-      // But for this simple demo just raise an alert...
-      alert(err.message);
-      return rff.cancelFormSubmission(fs);
-    });
-  });
+  // Keep this example short...
+  alert(JSON.stringify(model));
 }
 ```
+
+For a more realistic submit handler, see [submitting](/doc/Submitting.md).

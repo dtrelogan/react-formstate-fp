@@ -30,6 +30,9 @@ function submitValidModel(model, form) {
       if (isPasswordCorrect) {
         // Normally you'd route somewhere else if the password was updated...
         fs = rff.setValid(fs, 'oldPassword', 'Your password was changed successfully.');
+        // Alternatively you could set this in root scope and add a feedback widget
+        // for that scope. This is a valuable concept.
+        // fs = rff.setValid(fs, '', 'Your password was changed successfully.');
       }
       else {
         fs = rff.setInvalid(fs, 'oldPassword', 'Incorrect password!');
@@ -38,8 +41,8 @@ function submitValidModel(model, form) {
     });
   }).catch(err => {
     form.setFormstate(fs => {
-      fs = rff.setFormSubmissionError(fs, err); // Add feedback around this to your form.
-      // alert(err.message); // or just raise an alert.
+      fs = rff.setFormSubmissionError(fs, err); // You can add feedback around this to your form.
+      alert(err.message); // or just raise an alert.
       return rff.cancelFormSubmission(fs);
     });
   });
