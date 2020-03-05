@@ -38,6 +38,8 @@ npm install --save react-formstate-fp
 
 ### Dependencies
 
+react-formstate-fp basically has no dependencies outside of React, but to be thorough:
+
 - A peer dependency on [React](https://facebook.github.io/react) >= 16.8 (React hooks).
 - Assumes an es5 environment (for example: Object.keys and Array.isArray).
 - Assumes es6 promises. (This is the only polyfill requirement beyond es5.)
