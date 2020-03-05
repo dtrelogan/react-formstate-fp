@@ -27,6 +27,7 @@ const theFormstateLooksLikeThis = {
     promises: {},
     inputDisabled: false
   },
+  initialModel: { username: '', email: '' },
   model: { username: '', email: '' },
   nestedScopeId: null
 }
@@ -59,6 +60,12 @@ const initialFormstate = rff.initializeFormstate(initialModel, validationSchema)
 
 ## Treating an object or an array in your model as a field rather than as a scope
 
+react-formstate-fp assumes an object or array in your initial model is a scope.
+
+Importantly, RFF will not let you update the value for a scope directly.
+
+For something like a multi-select, then, in order to update the value directly, you have to tell RFF that the array value should be treated as a field, not a scope. You do this by providing a schema to initializeFormstate:
+
 ```es6
 const initialModel = {
   multiselectValues: ['1','5','8']
@@ -66,7 +73,7 @@ const initialModel = {
 
 const schema = {
   fields: {
-    'multiselectValues': {} // Because this is specified as a field, initializeFormstate won't drill into the array.
+    'multiselectValues': {} // Tell RFF to treat this model key as a field.
   }
 };
 
@@ -103,26 +110,54 @@ const insteadOfLikeThis = {
 };
 ```
 
-This is especially useful for suppressing the internals of something like a "moment" in your initial formstate.
+This is also relevant for something like a "moment" in a date-picker input:
 
 ```es6
+
 const initialModel = {
-  startDate: moment() // A moment object contains like a hundred properties that are all irrelevant to your formstate.
+  startDate: moment()
 };
 
 const schema = {
   fields: {
-    'startDate': {} // Don't drill into the moment object. When looking at formstate in the debugger you'll be glad you did this.
+    'startDate': {} // Don't drill into the moment object.
   }
 };
 
 const initialFormstate = rff.initializeFormstate(initialModel, schema);
 ```
 
+If you *do* want to modify the value of an actual scope -- for instance to add or remove items from an array -- use [addModelKey and deleteModelKey](/doc/Arrays.md) instead. This important distinction is covered further in the [quirks and edge cases](/doc/Quirks.md) document.
+
 ## Scope validation
 
+Synchronous example:
+
 ```es6
-const addressInitialModel = {
+const initialModel = {
+  oldPassword: '',
+  newPassword: '',
+  confirmNewPassword: ''
+};
+
+const validationSchema = {
+  fields: {
+    'oldPassword': { required: true },
+    'newPassword': { required: true, validate: validatePassword },
+    'confirmNewPassword': { required: true }
+  },
+  scopes: {
+    '': { validate: validatePasswordConfirmation }
+  }
+};
+
+const initialFormstate = rff.initializeFormstate(initialModel, validationSchema);
+```
+
+Asynchronous example:
+
+```es6
+const initialModel = {
   line1: '',
   line2: '',
   city: '',
@@ -130,7 +165,7 @@ const addressInitialModel = {
   zip: ''
 };
 
-const addressValidationSchema = {
+const schema = {
   fields: {
     'line1': { required: true },
     'city': { required: true },
@@ -142,25 +177,12 @@ const addressValidationSchema = {
   }
 };
 
-const initialModel = {
-  addresses: [
-    addressInitialModel
-  ];
-};
-
-const validationSchema = {
-  scopes: {
-    'addresses': {
-      required: true,
-      schemaForEach: addressValidationSchema  // 'schemaForEach' is an important tool for schema composition.
-    }
-  }
-};
-
 const initialFormstate = rff.initializeFormstate(initialModel, validationSchema);
 ```
 
-## Initialization for nested forms
+## Initialization for nested forms: "schema" and "schemaForEach"
+
+Use the "schema" prop to incorporate a nested schema:
 
 ```es6
 import Address, { initialModel as addressInitialModel, validationSchema as addressValidationSchema } from './Address.jsx';
@@ -178,6 +200,28 @@ const validationSchema = {
   },
   scopes: {
     'homeContactInfo.address': { schema: addressValidationSchema }  // 'schema' is an important tool for schema composition.
+  }
+}
+
+const initialFormstate = rff.initializeFormstate(initialModel, validationSchema);
+```
+
+Use the "schemaForEach" prop for arrays:
+
+```es6
+import Address, { initialModel as addressInitialModel, validationSchema as addressValidationSchema } from './Address.jsx';
+
+const initialModel = {
+  name: '',
+  addresses: []
+};
+
+const validationSchema = {
+  fields: {
+    'name': { required: true }
+  },
+  scopes: {
+    'addresses': { schemaForEach: addressValidationSchema }  // 'schemaForEach' is an important tool for schema composition.
   }
 }
 

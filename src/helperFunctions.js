@@ -113,19 +113,25 @@ export function fieldName(modelKey) {
 //   return true;
 // }
 
-export function modelGet(model, modelKey) {
+export function modelGet(model, modelKey, throwError = true) {
   if (modelKey === '') {
     return model;
   }
-  let curr = model;
+  let curr = model, notFound = false;
   parseKeys(modelKey).forEach((key) => {
     if (hasKey(curr, key)) {
       curr = curr[key];
     }
     else {
-      throw new Error(`Unable to get modelKey "${modelKey}" from model ${JSON.stringify(model)}.`);
+      notFound = true;
     }
   });
+  if (notFound) {
+    if (throwError) {
+      throw new Error(`Unable to get modelKey "${modelKey}" from model ${JSON.stringify(model)}.`);
+    }
+    return undefined;
+  }
   return curr;
 }
 

@@ -12,30 +12,28 @@ Use these if you like, but feel free to create your own logic!
 
 ```es6
 
-// (This is library source code so it doesn't prepend 'rff.' to these function calls, but if you write your own, you will need to.)
-
 export function primeOnSubmit(formstate, modelKey) {
-  if (isSubmitted(formstate, modelKey)) {return true;}
+  if (rff.isSubmitted(formstate, modelKey)) {return true;}
 
   // Provide feedback about asynchronous status as soon as you have it.
-  if (isWaiting(formstate, modelKey) || isAsynclyValidated(formstate, modelKey) || getAsyncError(formstate, modelKey)) {return true;}
+  if (rff.isWaiting(formstate, modelKey) || rff.isAsynclyValidated(formstate, modelKey) || rff.getAsyncError(formstate, modelKey)) {return true;}
 
   // Wait until async finishes to show all new synchronous validation results at same time.
   // If you're waiting for async, this helps to reinforce the impression that the form is waiting.
   // (Or provide your own code to do what you want.)
-  return isSubmitting(formstate, modelKey) && !isFormWaiting(formstate);
+  return rff.isSubmitting(formstate, modelKey) && !isFormWaiting(formstate);
 }
 
 export function primeOnChange(formstate, modelKey) {
-  return primeOnSubmit(formstate, modelKey) || isChanged(formstate, modelKey);
+  return primeOnSubmit(formstate, modelKey) || rff.isChanged(formstate, modelKey);
 }
 
 export function primeOnBlur(formstate, modelKey) {
-  return primeOnSubmit(formstate, modelKey) || isBlurred(formstate, modelKey);
+  return primeOnSubmit(formstate, modelKey) || rff.isBlurred(formstate, modelKey);
 }
 
 export function primeOnChangeThenBlur(formstate, modelKey) {
-  return primeOnSubmit(formstate, modelKey) || (isChanged(formstate, modelKey) && isBlurred(formstate, modelKey));
+  return primeOnSubmit(formstate, modelKey) || (rff.isChanged(formstate, modelKey) && rff.isBlurred(formstate, modelKey));
 }
 
 ```
@@ -63,6 +61,7 @@ The brute force approach... This is what most people think they want but I don't
       {rff.getMessage(formstate, 'username')}
     </Form.Control.Feedback>
   </Form.Group>
+  {restOfForm}
 </Form>
 ```
 
@@ -79,6 +78,7 @@ Better, but still not the best choice imo.
       {rff.getMessage(formstate, 'username')}
     </Form.Control.Feedback>
   </Form.Group>
+  {restOfForm}
 </Form>
 ```
 
@@ -134,6 +134,7 @@ return (
       <Input type='text' {...modelKey('address.line1')}/>
       <Feedback {...modelKey('address.line1')}/>
     </FormGroup>
+    {restOfForm}
   </Form>
 );
 ```
@@ -201,15 +202,130 @@ const form = {
 
 return (
   <Form>
-    <FormScope name='address'>
-      <FormField name='line1'>
-        <FormGroup>
-          <Form.Label>Street Address Line 1</Form.Label>
-          <Input type='text'/>
-          <Feedback/>
-        </FormGroup>
-      </FormField>
+    <FormScope formstate={formstate} form={form}>
+      <FormScope name='address'>
+        <FormField name='line1'>
+          <FormGroup>
+            <Form.Label>Street Address Line 1</Form.Label>
+            <Input type='text'/>
+            <Feedback/>
+          </FormGroup>
+        </FormField>
+      </FormScope>
+      {restOfForm}
     </FormScope>
   </Form>
 );
 ```
+
+## Further optimization
+
+If you're not configuring validation in the JSX, sometimes it's cleaner to skip the FormField elements:
+
+```jsx
+const form = {
+  setFormstate,
+  adaptors: [InputAndFeedback]
+};
+
+return (
+  <Form>
+    <FormScope formstate={formstate} form={form}>
+      <InputAndFeedback modelKey='address.line1' label='Line 1'/>
+      <InputAndFeedback modelKey='address.line2' label='Line 2'/>
+      <InputAndFeedback modelKey='address.city' label='City'/>
+      <InputAndFeedback modelKey='address.state' label='State'/>
+      <InputAndFeedback modelKey='address.zip' label='Zip'/>
+      {restOfForm}
+    </FormScope>
+  </Form>
+);
+```
+
+You can still use FormScope to save yourself some repetition:
+
+```jsx
+const form = {
+  setFormstate,
+  adaptors: [InputAndFeedback]
+};
+
+return (
+  <Form>
+    <FormScope formstate={formstate} form={form}>
+      <FormScope name='address'>
+        <InputAndFeedback modelKey='line1' label='Line 1'/>
+        <InputAndFeedback modelKey='line2' label='Line 2'/>
+        <InputAndFeedback modelKey='city' label='City'/>
+        <InputAndFeedback modelKey='state' label='State'/>
+        <InputAndFeedback modelKey='zip' label='Zip'/>
+      </FormScope>
+      {restOfForm}
+    </FormScope>
+  </Form>
+);
+```
+
+You can create a reusable nested form for an address:
+
+```jsx
+function Address({formstate, form}) {
+  return (
+    <FormScope formstate={formstate} form={form}>
+      <InputAndFeedback modelKey='line1' label='Line 1'/>
+      <InputAndFeedback modelKey='line2' label='Line 2'/>
+      <InputAndFeedback modelKey='city' label='City'/>
+      <InputAndFeedback modelKey='state' label='State'/>
+      <InputAndFeedback modelKey='zip' label='Zip'/>
+    </FormScope>
+  );
+}
+```
+
+```jsx
+return (
+  <Form>
+    <FormScope formstate={formstate} form={form}>
+      <InputAndFeedback modelKey='name' label='Name'/>
+      <FormScope name='homeAddress'/>
+        <Address nestedForm/>
+      </FormScope>
+      <FormScope name='workAddress'/>
+        <Address nestedForm/>
+      </FormScope>
+      {restOfForm}
+    </FormScope>
+  </Form>
+);
+```
+
+It may be useful to know you can also do something like this (contrived) example:
+
+```jsx
+function Address({formstate, form, children}) {
+  return (
+    <FormScope formstate={formstate} form={form}>
+      {children}
+    </FormScope>
+  );
+}
+```
+
+```jsx
+return (
+  <Form>
+    <FormScope name='address' formstate={formstate} form={form}>
+      <Address nestedForm>
+        <InputAndFeedback modelKey='line1' label='Line 1'/>
+        <InputAndFeedback modelKey='line2' label='Line 2'/>
+        <InputAndFeedback modelKey='city' label='City'/>
+        <InputAndFeedback modelKey='state' label='State'/>
+        <InputAndFeedback modelKey='zip' label='Zip'/>
+      </Address>
+      {restOfForm}
+    </FormScope>
+  </Form>
+);
+```
+
+react-formstate-fp provides *a great deal* of flexibility.

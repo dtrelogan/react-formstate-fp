@@ -1,4 +1,4 @@
-import { addScope, normalizeModelKey, parseParentScope, parseRootScope } from '../src/helperFunctions.js';
+import { addScope, normalizeModelKey, parseParentScope, parseRootScope } from '../lib/helperFunctions.js';
 
 describe('addScope', () => {
   test('it should add a dot', () => {
@@ -27,18 +27,18 @@ describe('normalizeModelKey', () => {
 
 describe('parseParentScope', () => {
   test('it should split on the last dot', () => {
-    expect(parseParentScope('a.b.c')).toEqual(['a.b','c']);
+    expect(parseParentScope('a.b.c')).toStrictEqual(['a.b','c']);
   });
   test('it should handle no dots', () => {
-    expect(parseParentScope('a')).toEqual(['','a']);
+    expect(parseParentScope('a')).toStrictEqual(['','a']);
   });
 });
 
 describe('parseRootScope', () => {
   test('it should split on the first dot', () => {
-    expect(parseRootScope('a.b.c')).toEqual(['a','b.c']);
+    expect(parseRootScope('a.b.c')).toStrictEqual(['a','b.c']);
   });
   test('it should handle no dots', () => {
-    expect(parseRootScope('a')).toEqual(['a',null]);
+    expect(parseRootScope('a')).toStrictEqual(['a',null]);
   });
 });

@@ -1,14 +1,13 @@
 import { generateQuickGuid, isNonEmptyString, inScope, modelGet, modelAssign } from './helperFunctions.js';
-import { convertToRootModelKey, getRootModelKey, getId } from './schemaAndLookup.js';
+import { convertToRootModelKey, getRootModelKey, getId, isScope } from './schemaAndLookup.js';
 
 
 //
 // helpers
 //
 
-function createStatus(initialValue) {
+function createStatus() {
   return {
-    initialValue,
     touched: {},
     synclyValid: null,
     async: {},
@@ -41,8 +40,7 @@ function upsertStatus(formstate, id, status, message) {
 
 
 export function clearStatus(formstate, modelKey) {
-  const [status, id] = getStatusAndId(formstate, modelKey);
-  return upsertStatus(formstate, id, createStatus(status.initialValue));
+  return upsertStatus(formstate, getId(formstate, modelKey), createStatus());
 }
 
 
@@ -57,7 +55,8 @@ export function getValue(formstate, modelKey) {
 }
 
 export function getInitialValue(formstate, modelKey) {
-  return getStatus(formstate, modelKey).initialValue;
+  const rootModelKey = convertToRootModelKey(formstate, modelKey);
+  return modelGet(formstate.initialModel, rootModelKey, false);
 }
 
 export function isSynclyValid(formstate, modelKey) {
@@ -168,12 +167,11 @@ export function setValueAndClearStatus(formstate, modelKey, value) {
 
   const rootModelKey = convertToRootModelKey(formstate, modelKey);
 
-  // Have to do this in a certain order to make sure initialValue gets set correctly.
+  if (isScope(formstate, getId(formstate, modelKey))) {
+    throw new Error(`You cannot set the value for a scope. You can configure "${rootModelKey}" as a field using a validation schema (for something like a multi-select), or you can use addModelKey and deleteModelKey to modify actual scopes.`);
+  }
 
-  formstate = {
-    ...clearStatus(formstate, modelKey),
-    model: modelAssign(formstate.model, rootModelKey, value)
-  };
+  formstate = clearStatus(formstate, modelKey);
 
   // Clear all affected scopes too.
 
@@ -188,7 +186,9 @@ export function setValueAndClearStatus(formstate, modelKey, value) {
     }
   });
 
-  return {...formstate, nestedScopeId};
+  const model = modelAssign(formstate.model, rootModelKey, value);
+
+  return {...formstate, model, nestedScopeId};
 }
 
 
@@ -215,17 +215,9 @@ export function setSynclyInvalid(formstate, modelKey, message) {
   return setValidity(formstate, modelKey, false, message);
 }
 
-export function setNotValidated(formstate, modelKey, message) {
-  return setNotSynclyValidated(formstate, modelKey, message);
-}
-
-export function setValid(formstate, modelKey, message) {
-  return setSynclyValid(formstate, modelKey, message);
-}
-
-export function setInvalid(formstate, modelKey, message) {
-  return setSynclyInvalid(formstate, modelKey, message);
-}
+export const setNotValidated = setNotSynclyValidated;
+export const setValid = setSynclyValid;
+export const setInvalid = setSynclyInvalid;
 
 
 

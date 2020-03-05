@@ -3,7 +3,7 @@ import {
 } from './helperFunctions.js';
 
 import {
-  convertToRootModelKey, getRootModelKey, getModelKey, getId, normalizeSchemaKeys, buildLookup, buildValidationSchemas, isScope
+  convertToRootModelKey, getRootModelKey, getModelKey, getId, normalizeSchemaKeys, buildLookup, buildValidationSchemas, isScope, createNestedScope
 } from './schemaAndLookup.js';
 
 import {
@@ -91,12 +91,20 @@ export function _synclyValidate(formstate, modelKey, form, id) {
   }
 
   if (validationSchema.validate) {
-    const result = validationSchema.validate(value, formstate, form, id);
+    const nestedScopeId = formstate.nestedScopeId;
+    let scopedFormstate = formstate, scopedForm = form;
+
+    if (formstate.nestedScopeId !== validationSchema.nestedScopeId) {
+      [scopedFormstate, scopedForm] = createNestedScope(validationSchema.nestedScopeId, formstate, form);
+    }
+
+    const result = validationSchema.validate(value, scopedFormstate, scopedForm, id);
+
     if (isNonEmptyString(result)) {
       return setSynclyInvalid(formstate, modelKey, result);
     }
     if (isObject(result) && result.model) {
-      formstate = result;
+      formstate = {...result, nestedScopeId};
       if (isScope(formstate, id) && !isSynclyValidated(formstate, modelKey)) {
         formstate = setSynclyValid(formstate, modelKey);
       }
@@ -155,25 +163,32 @@ export function asynclyValidate(formstate, modelKey, form, id = null) {
     return formstate;
   }
 
-  const asyncResultErrorMessage = 'An asynchronous validation function should return a formstate object to update formstate synchronously, or an array of [formstate, asyncToken, promise] to proceed with asynchronous validation.';
+  const nestedScopeId = formstate.nestedScopeId;
+  let scopedFormstate = formstate, scopedForm = form;
 
-  const result = validateAsyncFunction(getValue(formstate, modelKey), formstate, form, Number(id));
+  if (formstate.nestedScopeId !== validationSchema.nestedScopeId) {
+    [scopedFormstate, scopedForm] = createNestedScope(validationSchema.nestedScopeId, formstate, form);
+  }
+
+  const result = validateAsyncFunction(getValue(formstate, modelKey), scopedFormstate, scopedForm, id);
+
+  const asyncResultErrorMessage = 'An asynchronous validation function should return a formstate object to update formstate synchronously, or an array of [formstate, asyncToken, promise] to proceed with asynchronous validation.';
 
   if (!isObject(result) && !Array.isArray(result)) {
     throw new Error(asyncResultErrorMessage);
   }
 
   if (isObject(result)) {
-    return result;
+    return {...result, nestedScopeId};
   }
 
   const [waitingFormstate, asyncToken, promise] = result;
 
-  if (typeof(asyncToken) !== 'string' || !isObject(promise) || !exists(promise.constructor) || promise.constructor.name !== 'Promise') {
+  if (!isObject(waitingFormstate) || !isNonEmptyString(asyncToken) || !isObject(promise) || !exists(promise.constructor) || promise.constructor.name !== 'Promise') {
     throw new Error(asyncResultErrorMessage);
   }
 
-  return setPromise(waitingFormstate, asyncToken, promise);
+  return setPromise({...waitingFormstate, nestedScopeId}, asyncToken, promise);
 }
 
 

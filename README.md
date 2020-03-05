@@ -32,6 +32,7 @@ npm install --save react-formstate-fp
 - [Change and blur handlers](/doc/Handlers.md)
 - [Nested forms](/doc/NestedForms.md)
 - [Arrays, addModelKey, deleteModelKey](/doc/Arrays.md)
+- [Quirks and edge cases](/doc/Quirks.md)
 - [useFormstate and bindToSetStateComponent](/doc/useFormstate.md)
 - [API index](/doc/ApiIndex.md)
 

@@ -14,33 +14,32 @@ const initialModel = {
   confirmNewPassword: ''
 };
 
-// You can specify validation here or you can specify it in the JSX below (like this example does).
-// Your choice...
-//
+// This example configures validation using a "schema". You can alternatively
+// configure validation directly in the JSX. The documentation shows how.
 // Validation configuration is intentionally nothing fancy.
 // It is simplest to express validation, especially client-side, through code.
-//
-// const validationSchema = {
-//   fields: {
-//     'oldPassword': { required: true },
-//     'newPassword': { required: true, validate: validatePassword },
-//     'confirmNewPassword': { required: true }
-//   },
-//   scopes: {
-//     '': { validate: validatePasswordConfirmation }
-//   }
-// };
-//
-// const initialFormstate = rff.initializeFormstate(initialModel, validationSchema);
+
+const validationSchema = {
+  fields: {
+    'oldPassword': { required: true },
+    'newPassword': { required: true, validate: validatePassword },
+    'confirmNewPassword': { required: true }
+  },
+  scopes: {
+    '': { validate: validatePasswordConfirmation }
+  }
+};
+
+const initialFormstate = rff.initializeFormstate(initialModel, validationSchema);
 
 
 export default function ExampleForm()
 {
-  const [formstate, setFormstate] = useState(() => rff.initializeFormstate(initialModel));
+  const [formstate, setFormstate] = useState(initialFormstate);
 
   const form = {
     setFormstate, // Tell react-formstate-fp how to update your formstate.
-    adaptors: [InputAndFeedback], // Tell RFF to pass formstate, form, and modelKey props to this component.
+    adaptors: [InputAndFeedback], // Tell RFF to pass formstate, form (and modelKey) props to this component.
     calculatePrimed: rff.primeOnChange // Tell the InputAndFeedback component when to show messages.
   };
 
@@ -50,16 +49,10 @@ export default function ExampleForm()
   return (
     <form onSubmit={(e) => submit(e, form)}>
       <Spinner visible={submitting}/>
-      <FormScope formstate={formstate} form={form} validate={validatePasswordConfirmation}>
-        <FormField name='oldPassword' required>
-          <InputAndFeedback type='password' label='Old Password'/>
-        </FormField>
-        <FormField name='newPassword' required validate={validatePassword}>
-          <InputAndFeedback type='password' label='New Password'/>
-        </FormField>
-        <FormField name='confirmNewPassword' required>
-          <InputAndFeedback type='password' label='Confirm New Password'/>
-        </FormField>
+      <FormScope formstate={formstate} form={form}>
+        <InputAndFeedback modelKey='oldPassword' type='password' label='Old Password'/>
+        <InputAndFeedback modelKey='newPassword' type='password' label='New Password'/>
+        <InputAndFeedback modelKey='confirmNewPassword' type='password' label='Confirm New Password'/>
       </FormScope>
       <input type='submit' value='Submit' disabled={disabled}/>
     </form>
@@ -88,10 +81,8 @@ function validatePasswordConfirmation(model, formstate) {
 
 function validatePassword(value) {
   if (value.length < 8) {
-    // Simply return a string and RFF takes care of the rest.
     return 'Password must be at least 8 characters.';
   }
-  // Returning nothing sets the field to valid.
 }
 
 // The submit process is fully customizable.

@@ -52,7 +52,7 @@ function submitValidModel(model, form) {
 
 ## driveFormSubmission
 
-Below is the source code for driveFormSubmission.
+Below is the code for driveFormSubmission.
 
 All of the functions used below are exposed in the API, so it is easy to write your own handler if you want to tweak its behavior.
 
@@ -63,31 +63,31 @@ function driveFormSubmission(form, submitValidModel)
 {
   form.setFormstate((formstate) =>
   {
-    if (isFormSubmitting(formstate)) {return formstate;}
+    if (rff.isFormSubmitting(formstate)) {return formstate;}
 
     // Put the form into submitting status and disable the inputs.
 
-    formstate = startFormSubmission(formstate);
+    formstate = rff.startFormSubmission(formstate);
 
     // Perform synchronous validation.
 
     // synclyValidateForm and validateForm are aliases for the same function.
-    formstate = synclyValidateForm(formstate, form);
+    formstate = rff.synclyValidateForm(formstate, form);
 
     // Fire off asynchronous validation that still needs to run.
 
-    formstate = asynclyValidateForm(formstate, form);
+    formstate = rff.asynclyValidateForm(formstate, form);
 
     // Wait for asynchronous validation.
 
-    Promise.all(getPromises(formstate)).then(() =>
+    Promise.all(rff.getPromises(formstate)).then(() =>
     {
       form.setFormstate((validatedFs) => {
 
         // Submit the model if valid.
 
-        if (!isModelValid(validatedFs)) {
-          return cancelFormSubmission(validatedFs);
+        if (!rff.isModelValid(validatedFs)) {
+          return rff.cancelFormSubmission(validatedFs);
         }
 
         Promise.resolve().then(() => {

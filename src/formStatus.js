@@ -33,7 +33,7 @@ export function wasAsyncErrorDuringSubmit(formstate, modelKey) {
   const asyncEnd = getAsyncEndTime(formstate, modelKey);
   const submitStart = getFormSubmissionStartTime(formstate);
   const submitEnd = getFormSubmissionEndTime(formstate);
-  return submitStart && submitStart < asyncEnd && (!submitEnd || asyncEnd < submitEnd);
+  return Boolean(submitStart && submitStart < asyncEnd && (!submitEnd || asyncEnd <= submitEnd));
 }
 
 export function isInputDisabled(formstate) {
@@ -41,7 +41,7 @@ export function isInputDisabled(formstate) {
 }
 
 export function isFormSubmitting(formstate) {
-  return formstate.formStatus.submit.started && !formstate.formStatus.submit.finished;
+  return Boolean(formstate.formStatus.submit.started && !formstate.formStatus.submit.finished);
 }
 
 export function isFormSubmittedAndUnchanged(formstate) {
@@ -73,7 +73,7 @@ export function getFormSubmissionHistory(formstate) {
 }
 
 export function wasSuccessfulSubmit(formstate) {
-  return !isFormSubmitting(formstate) && getFormSubmissionValidity(formstate) && !getFormSubmissionError(formstate);
+  return Boolean(!isFormSubmitting(formstate) && getFormSubmissionValidity(formstate) && !getFormSubmissionError(formstate));
 }
 
 export function getFormCustomProperty(formstate, name) {
@@ -156,6 +156,10 @@ export function setFormSubmitted(formstate) {
   if (isModelInvalid(formstate)) {submit.valid = false;}
   else if (isModelValid(formstate)) {submit.valid = true;}
   else {submit.valid = null;}
+
+  // If the user customizes the submit, and decides not to run async validation if the model is syncly invalid,
+  // then there could be async errors that didn't technically happen during the submit. To be precise, it's arguably
+  // better to filter those out when capturing submit history.
 
   const asyncErrorModelKeys = getFormAsyncErrorModelKeys(formstate).filter(modelKey => wasAsyncErrorDuringSubmit(formstate, modelKey));
   if (asyncErrorModelKeys.length > 0) {

@@ -5,8 +5,8 @@
 ```es6
 function handleChange(form, value, id) {
   form.setFormstate((formstate) => {
-    if (isInputDisabled(formstate)) {return formstate;}
-    return changeAndValidate(formstate, getModelKey(formstate, id), value, form);
+    if (rff.isInputDisabled(formstate)) {return formstate;}
+    return rff.changeAndValidate(formstate, rff.getModelKey(formstate, id), value, form);
   });
 }
 ```
@@ -54,27 +54,27 @@ function Input({type, formstate, modelKey, form, handleChange, handleBlur, ...ot
 
 ## The standard blur handler
 
-Overriding the blur handler would be advanced usage, but all of the functions used in handleBlur are exposed in the API so you can if you want.
+Overriding the blur handler would be advanced usage, but all of the functions used in handleBlur are exposed in the API so you can if you need to.
 
 ```es6
 function handleBlur(form, id) {
   form.setFormstate((formstate) => {
-    if (isInputDisabled(formstate)) {return formstate;}
+    if (rff.isInputDisabled(formstate)) {return formstate;}
 
-    const modelKey = getModelKey(formstate, id);
+    const modelKey = rff.getModelKey(formstate, id);
 
-    formstate = setBlurred(formstate, modelKey);
+    formstate = rff.setBlurred(formstate, modelKey);
 
-    if (!isFormSubmitting(formstate)) {
+    if (!rff.isFormSubmitting(formstate)) {
       // If the user just tabs right through a field without changing anything do you want the form to do anything?
       if (form.validateOnBlur) {
-        formstate = synclyValidate(formstate, modelKey, form, id);
-        formstate = asynclyValidate(formstate, modelKey, form, id);
+        formstate = rff.synclyValidate(formstate, modelKey, form, id);
+        formstate = rff.asynclyValidate(formstate, modelKey, form, id);
       }
-      else if (isChanged(formstate, modelKey)) {
+      else if (rff.isChanged(formstate, modelKey)) {
         // Asynchronous validation might be configured to run onBlur, but if validateOnBlur is turned off, only
         // try to run it if the user actually changed the field.
-        formstate = asynclyValidate(formstate, modelKey, form, id);
+        formstate = rff.asynclyValidate(formstate, modelKey, form, id);
       }
     }
 

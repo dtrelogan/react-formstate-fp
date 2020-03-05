@@ -51,8 +51,8 @@ export function isScope(formstate, id) {
 
 export function isRequired(formstate, id, form) {
   const validationSchema = formstate.validationSchemas[id];
-  const jsxValidationSchema = form.validationSchemas && form.validationSchemas[id];
-  return (validationSchema && validationSchema.required) || (jsxValidationSchema && jsxValidationSchema.required);
+  const jsxValidationSchema = form && form.validationSchemas && form.validationSchemas[id];
+  return Boolean((validationSchema && validationSchema.required) || (jsxValidationSchema && jsxValidationSchema.required));
 }
 
 
@@ -65,10 +65,6 @@ export function isRequired(formstate, id, form) {
 export function initializeFormstate(initialModel, formValidationSchema = {}) {
   if (!isContainer(initialModel)) {
     throw new Error('The initialModel passed to initializeFormstate must be an object or an array.');
-  }
-
-  if (!isObject(formValidationSchema)) {
-    throwSchemaError();
   }
 
   const formstate = {
@@ -86,6 +82,7 @@ export function initializeFormstate(initialModel, formValidationSchema = {}) {
       promises: {},
       inputDisabled: false
     },
+    initialModel,
     model: initialModel,
     nestedScopeId: null
   };
@@ -115,16 +112,22 @@ function throwSchemaError(modelKey) {
 
 
 export function normalizeSchemaKeys(formValidationSchema, normalizedFormValidationSchema, fieldsOrScopes, scopeKey) {
+  if (!isObject(formValidationSchema)) {throwSchemaError(scopeKey);}
   if (formValidationSchema[fieldsOrScopes] === undefined) {return;} // Maybe they only defined fields and not scopes, or vice versa, or neither.
-  if (!isObject(formValidationSchema[fieldsOrScopes])) {throwSchemaError();}
+  if (!isObject(formValidationSchema[fieldsOrScopes])) {throwSchemaError(scopeKey);}
   Object.keys(formValidationSchema[fieldsOrScopes]).forEach(k => {
     const validationSchema = formValidationSchema[fieldsOrScopes][k];
     const rootModelKey = addScope(scopeKey, normalizeModelKey(k));
     if (!isObject(validationSchema)) {throwSchemaError(rootModelKey);}
-    normalizedFormValidationSchema[fieldsOrScopes][rootModelKey] = validationSchema;
-    if (fieldsOrScopes === 'scopes' && validationSchema.schema) {
+    if (fieldsOrScopes === 'scopes' && hasProp(validationSchema, 'schema')) {
       normalizeSchemaKeys(validationSchema.schema, normalizedFormValidationSchema, 'fields', rootModelKey);
       normalizeSchemaKeys(validationSchema.schema, normalizedFormValidationSchema, 'scopes', rootModelKey);
+    }
+    else {
+      if (normalizedFormValidationSchema[fieldsOrScopes][rootModelKey]) {
+        throw new Error(`The model key "${rootModelKey}" may only have one validation schema defined.`);
+      }
+      normalizedFormValidationSchema[fieldsOrScopes][rootModelKey] = [validationSchema, scopeKey];
     }
   });
 }
@@ -138,6 +141,14 @@ export function buildLookup(formstate, rootModelKey, value, normalizedFormValida
   formstate.lookup.rootModelKeysById[id] = rootModelKey;
   formstate.lookup.idsByRootModelKey[rootModelKey] = id;
 
+  if (rootModelKey === '' && normalizedFormValidationSchema.fields[rootModelKey]) {
+    throw new Error('The root scope cannot be overridden as a field.');
+  }
+
+  if (!isContainer(value) && normalizedFormValidationSchema.scopes[rootModelKey]) {
+    throw new Error(`Root model key "${rootModelKey}" cannot be defined as a scope.`);
+  }
+
   if (!isContainer(value) || normalizedFormValidationSchema.fields[rootModelKey]) {
     // For something like a multi-select you can label the modelKey as a formField and it won't delve into the array of selected options.
     // For a data-type like a "moment", this can prevent polluting the formstate with lots of unnecessary status objects.
@@ -147,12 +158,13 @@ export function buildLookup(formstate, rootModelKey, value, normalizedFormValida
   formstate.lookup.scopes[id] = true;
 
   if (Array.isArray(value)) {
-    const validationSchema = normalizedFormValidationSchema.scopes[rootModelKey];
-    const schemaForEach = validationSchema && validationSchema.schemaForEach;
+    const schemaAndNestedScope = normalizedFormValidationSchema.scopes[rootModelKey];
+    const validationSchema = schemaAndNestedScope && schemaAndNestedScope[0];
 
     for (let i = 0, len = value.length; i < len; i++) {
       const itemKey = addScope(rootModelKey, String(i));
-      if (schemaForEach) {
+      if (hasProp(validationSchema, 'schemaForEach')) {
+        const schemaForEach = validationSchema.schemaForEach;
         normalizeSchemaKeys(schemaForEach, normalizedFormValidationSchema, 'fields', itemKey);
         normalizeSchemaKeys(schemaForEach, normalizedFormValidationSchema, 'scopes', itemKey);
       }
@@ -179,9 +191,11 @@ export function buildValidationSchemas(formstate, normalizedFormValidationSchema
     if (formstate.validationSchemas[id]) {
       throw new Error(`The model key "${rootModelKey}" can only have one validation schema defined.`);
     }
-    const schema = buildValidationSchema(normalizedFormValidationSchema[fieldsOrScopes][rootModelKey], rootModelKey, fieldsOrScopes === 'scopes');
+    const [rawSchema, nestedScopeKey] = normalizedFormValidationSchema[fieldsOrScopes][rootModelKey];
+    const schema = buildValidationSchema(rawSchema, rootModelKey, fieldsOrScopes === 'scopes');
     if (Object.keys(schema).length > 0) {
-      formstate.validationSchemas[id] = schema;
+      const nestedScopeId = nestedScopeKey !== '' ? formstate.lookup.idsByRootModelKey[nestedScopeKey] : null;
+      formstate.validationSchemas[id] = {...schema, nestedScopeId};
     }
   });
 }
@@ -251,4 +265,40 @@ export function buildValidationSchema(props, modelKey, isScope) {
 
 function throwAsyncPropsError(modelKey) {
   throw new Error(`The validateAsync property for model key "${modelKey}" must be an array specifying the validation function, and when to run the validation ("onChange", "onBlur", or "onSubmit"). For example, validateAsync: [validateUniqueUsername, 'onBlur'].`);
+}
+
+
+export function createNestedScope(newNestedScopeId, formstate, form) {
+  const nestedFormstate = {
+    ...formstate,
+    nestedScopeId: newNestedScopeId
+  };
+
+  const nestedForm = {...form, parentForm: form};
+
+  if (form.getFormstate) {
+    nestedForm.getFormstate = () => {
+      return {...form.getFormstate(), nestedScopeId: newNestedScopeId};
+    };
+    nestedForm.setFormstate = (fsOrFunction) => {
+      let fs = fsOrFunction;
+      if (typeof(fsOrFunction) === 'function') {
+        fs = fsOrFunction({...form.getFormstate(), nestedScopeId: newNestedScopeId});
+      }
+      form.setFormstate({...fs, nestedScopeId: null});
+    };
+  }
+  else {
+    nestedForm.setFormstate = (setFormstateFunction) => {
+      if (typeof(setFormstateFunction) !== 'function') {
+        throw new Error('Please pass a function to setFormstate, something like: (currentFormstate) => rff.changeAndValidate(currentFormstate, modelKey, value, form)');
+      }
+      form.setFormstate((fs) => {
+        const updatedFs = setFormstateFunction({...fs, nestedScopeId: newNestedScopeId});
+        return {...updatedFs, nestedScopeId: null};
+      });
+    };
+  }
+
+  return [nestedFormstate, nestedForm];
 }

@@ -166,13 +166,3 @@ function removeMe(form) {
   form.setFormstate(fs => rff.deleteModelKeyAndValidateParentScope(fs, '', form));
 }
 ```
-
-## It's better to use a validation schema when using addModelKey and deleteModelKey
-
-You can configure validation in the JSX for a nested form. It works fine. In some ways it's easier, because then you don't need to compose schemas using the 'schema' and 'schemaForEach' features.
-
-But, if you change your model dynamically there is an edge case.
-
-After calling addModelKey, if you end up in the submit handler before a subsequent render completes, a validation schema computed from your JSX could "lag behind" the model such that an invalid model could theoretically be submitted.
-
-The chances of this happening are very, very small, and if you have server-side validation this is largely a non-issue. But, to eliminate the possibility altogether, it's probably wiser to configure validation outside your JSX when using addModelKey.
