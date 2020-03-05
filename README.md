@@ -38,14 +38,14 @@ npm install --save react-formstate-fp
 
 ### Dependencies
 
-react-formstate-fp basically has one dependency:
-
 - A peer dependency on [React](https://facebook.github.io/react) >= 16.8 (React hooks).
+- [@babel/runtime](https://babeljs.io/docs/en/babel-runtime) might be pulled in depending on how you build your project.
 
-but to be thorough:
+Basically no dependencies other than React.
+
+### Environment
 
 - Assumes an es5 environment (for example: Object.keys and Array.isArray).
 - Assumes es6 promises. (This is the only polyfill requirement beyond es5.)
-- [@babel/runtime](https://babeljs.io/docs/en/babel-runtime) might be pulled in depending on how you build your project.
 
-That's it.
+Thanks for your interest!
