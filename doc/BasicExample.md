@@ -4,7 +4,7 @@ For code for the "InputAndFeedback" component, see the [demo](https://dtrelogan.
 
 ```jsx
 import React, { useState } from 'react';
-import { rff, FormScope, FormField } from 'react-formstate-fp';
+import { rff, FormScope } from 'react-formstate-fp';
 import { InputAndFeedback } from '../components/rffBootstrap.jsx';
 import Spinner from '../components/Spinner.jsx';
 
