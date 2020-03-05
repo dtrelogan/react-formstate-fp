@@ -176,7 +176,7 @@ or
 </FormField>
 ```
 
-The mechanics of scope-level validation are as follows.
+The mechanics of scope-level validation are as follows:
 
 Field-level validation is called first for the field. Then scope-level validation is called for all enclosing scopes, in order of specificity, starting with the immediate parent scope, and ending with the root scope. (Note that, when a field is changed, the status for the field itself is cleared, along with the statuses (and the messages) for all the enclosing scopes.)
 

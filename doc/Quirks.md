@@ -172,7 +172,9 @@ if (model.addresses.length > 0) {
 
 return (
   <FormScope formstate={formstate} form={form}>
-    {addressesSection}
+    <FormScope name='addresses'>
+      {addressesSection}
+    </FormScope>
   </FormScope>
 );
 ```
@@ -196,7 +198,7 @@ function validateAddress(model, formstate, form, id) {
 }
 ```
 
-The code for validateAddress is cleaner if it is moved to a nested form:
+The code for validateAddress is cleaner if it is moved into a nested form:
 
 ```jsx
 let addressesSection = null;
@@ -263,7 +265,7 @@ function addAddress(form) {
 
 So when does schemaForEach apply?
 
-```
+```es6
 // 1. An initial model could populate the array:
 
 const initialModel = {
@@ -286,6 +288,7 @@ function ExampleForm({model}) {
 
   // ...
 }
+```
 
 ## Prefer validation schemas when using addModelKey and deleteModelKey
 
@@ -293,4 +296,4 @@ If you change your model dynamically and use JSX validation configuration there 
 
 After calling addModelKey, in the unlikely case you end up in the submit handler before a subsequent render completes (as in, within milliseconds), the validation schema that is computed from your JSX might not be computed yet, such that it could "lag behind" the model and an invalid model could theoretically be submitted.
 
-The chances of this happening are very, very small, and if you have server-side validation this is largely a non-issue. But, to eliminate the possibility altogether, it's might be wiser to configure validation using schemas when using addModelKey.
+The chances of this happening are very, very small, and if you have server-side validation this is largely a non-issue. But, to eliminate the possibility altogether, it's might be wiser to configure validation with a schema when using addModelKey.
