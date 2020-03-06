@@ -232,7 +232,7 @@ function validateAddress(model, formstate) {
 }
 ```
 
-Both approaches -- validation schemas and JSX configuration -- work sensibly, they just work **differently**.
+Both approaches -- validation schemas and JSX configuration -- work sensibly, they just work a little **differently** when it comes to validation scope.
 
 ## schemaForEach has no effect on addModelKey
 
@@ -266,6 +266,12 @@ function addAddress(form) {
 So when does schemaForEach apply?
 
 ```es6
+const schema = {
+  scopes: {
+    'addresses': { schemaForEach: addressSchema }
+  }
+};
+
 // 1. An initial model could populate the array:
 
 const initialModel = {
@@ -274,15 +280,9 @@ const initialModel = {
   ]
 };
 
-const schema = {
-  scopes: {
-    'addresses': { schemaForEach: addressSchema }
-  }
-};
-
 function ExampleForm({model}) {
 
-  // 2. An existing model being edited/updated could have the array populated:
+  // 2. When editing an existing model, it could have several addresses populated:
 
   const initialFormstate = rff.initializeFormstate(model || initialModel, schema);
 
@@ -296,4 +296,4 @@ If you change your model dynamically and use JSX validation configuration there 
 
 After calling addModelKey, in the unlikely case you end up in the submit handler before a subsequent render completes (as in, within milliseconds), the validation schema that is computed from your JSX might not be computed yet, such that it could "lag behind" the model and an invalid model could theoretically be submitted.
 
-The chances of this happening are very, very small, and if you have server-side validation this is largely a non-issue. But, to eliminate the possibility altogether, it's might be wiser to configure validation with a schema when using addModelKey.
+The chances of this happening are very, very small, and if you have server-side validation this is largely a non-issue. But, to eliminate the possibility altogether, it might be wiser to provide a validation schema when using addModelKey.
