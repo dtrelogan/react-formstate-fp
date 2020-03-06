@@ -85,7 +85,6 @@ function validateName(name) {
 ## The nested form
 
 ```jsx
-import { library as validation } from 'react-formstate-validation';
 
 // Export these so the parent form can use them.
 
@@ -137,7 +136,7 @@ export default function EmergencyContact({formstate, form, title}) {
 
 
 function validateEmail(value) {
-  if (!validation.email(value)) {
+  if (!/^\S+@\S+\.\S+$/.test(value)) {
     return 'Not a valid email address';
   }
 }

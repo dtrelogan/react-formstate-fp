@@ -2,7 +2,9 @@
 
 react-formstate-fp is not a validation library per se, but rather a way to wire up validation, which in React is just as valuable.
 
-For a library of reusable validation functions see [validator](https://www.npmjs.com/package/validator) or, for something more minimal,  [react-formstate-validation](https://www.npmjs.com/package/react-formstate-validation). (The [nested forms](/doc/NestedForms.md) example provides an example of using the react-formstate-validation library.)
+For a library of reusable validation functions see [validator](https://www.npmjs.com/package/validator).
+
+(Note that as the author of [react-formstate-validation](https://www.npmjs.com/package/react-formstate-validation), I do not recommend using it with react-formstate-fp, because its main purpose is to hydrate the fluent validation syntax supported by [react-formstate](https://www.npmjs.com/package/react-formstate). Moreover, react-formstate-fp does not plan to support that validation syntax because, as the author, I did not find it all that useful in practice. It was almost always easier to write a simple validation function.)
 
 ## Nothing fancy
 
