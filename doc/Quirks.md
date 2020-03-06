@@ -180,19 +180,27 @@ return (
 ```
 
 ```es6
-function validateAddress(model, formstate, form, id) {
+function validateAddress(address, formstate, form, id) {
 
-  // Since we're using JSX configuration and not 'schemaForEach',
-  // this function is NOT dropped into a nested scope when it's in the same component.
-
-  // Since you don't know which item in the array you are validating,
-  // you have to get the model key from the id parameter:
-
-  const modelKey = rff.getModelKey(formstate, id);
-
-  const address = rff.getValue(formstate, modelKey);
+  // RFF provides the address parameter by doing something like this:
+  // address = rff.getValue(formstate, rff.getModelKey(formstate, id));
+  // so it is the address object, not the root model.
 
   if (address.line1.trim() === '') {
+
+    // But, since we're using JSX configuration and not 'schemaForEach', this
+    // function is NOT dropped into a nested scope when it's in the same
+    // component, so formstate.nestedScopeId will be set to null here.
+
+    // To figure out which item in the array we are validating,
+    // get the model key from the id parameter.
+
+    const modelKey = rff.getModelKey(formstate, id);
+
+    // Appending 'line1' to the model key is a little tedious in this example,
+    // so it might be better to move this into a nested scope. See below.
+    // (Or use field validation to validate line1 directly.)
+
     return rff.setInvalid(formstate, `${modelKey}.line1`, 'Street address line 1 is required');
   }
 }
@@ -225,8 +233,8 @@ In the Address component:
 the validateAddress function is now more sensibly scoped:
 
 ```es6
-function validateAddress(model, formstate) {
-  if (model.line1.trim() === '') {
+function validateAddress(address, formstate) {
+  if (address.line1.trim() === '') {
     return rff.setInvalid(formstate, 'line1', 'Street address line 1 is required');
   }
 }

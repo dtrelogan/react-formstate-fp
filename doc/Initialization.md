@@ -185,7 +185,10 @@ const initialFormstate = rff.initializeFormstate(initialModel, validationSchema)
 Use the "schema" prop to incorporate a nested schema:
 
 ```es6
-import Address, { initialModel as addressInitialModel, validationSchema as addressValidationSchema } from './Address.jsx';
+import Address, {
+  initialModel as addressInitialModel,
+  validationSchema as addressValidationSchema
+} from './Address.jsx';
 
 const initialModel = {
   homeContactInfo: {
@@ -199,7 +202,8 @@ const validationSchema = {
     'homeContactInfo.email': { required: true, validate: validateEmail }
   },
   scopes: {
-    'homeContactInfo.address': { schema: addressValidationSchema }  // 'schema' is an important tool for schema composition.
+    // 'schema' is an important tool for schema composition.
+    'homeContactInfo.address': { schema: addressValidationSchema }
   }
 }
 
@@ -209,7 +213,10 @@ const initialFormstate = rff.initializeFormstate(initialModel, validationSchema)
 Use the "schemaForEach" prop for arrays:
 
 ```es6
-import Address, { initialModel as addressInitialModel, validationSchema as addressValidationSchema } from './Address.jsx';
+import Address, {
+  initialModel as addressInitialModel,
+  validationSchema as addressValidationSchema
+} from './Address.jsx';
 
 const initialModel = {
   name: '',
@@ -221,7 +228,8 @@ const validationSchema = {
     'name': { required: true }
   },
   scopes: {
-    'addresses': { schemaForEach: addressValidationSchema }  // 'schemaForEach' is an important tool for schema composition.
+    // 'schemaForEach' is an important tool for schema composition.
+    'addresses': { schemaForEach: addressValidationSchema }
   }
 }
 
