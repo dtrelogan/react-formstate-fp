@@ -39,7 +39,7 @@ export default function ExampleForm()
 
   const form = {
     setFormstate, // Tell react-formstate-fp how to update your formstate.
-    adaptors: [InputAndFeedback], // Tell RFF to pass formstate, form (and modelKey) props to this component.
+    adaptors: [InputAndFeedback], // Pass formstate, form (and modelKey) props to this component.
     calculatePrimed: rff.primeOnChange // Tell the InputAndFeedback component when to show messages.
   };
 
