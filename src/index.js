@@ -102,6 +102,8 @@ import {
 
 
 import {
+  createRffAdaptor,
+  createRffNestedFormAdaptor,
   useFormstate,
   bindToSetStateComponent,
   FormScope,
@@ -205,4 +207,4 @@ const rff = {
 };
 
 
-export { useFormstate, FormScope, FormField, rff };
+export { useFormstate, FormScope, FormField, createRffAdaptor, createRffNestedFormAdaptor, rff };

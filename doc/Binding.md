@@ -231,11 +231,11 @@ const form = {
 return (
   <Form>
     <FormScope formstate={formstate} form={form}>
-      <InputAndFeedback modelKey='address.line1' label='Line 1'/>
-      <InputAndFeedback modelKey='address.line2' label='Line 2'/>
-      <InputAndFeedback modelKey='address.city' label='City'/>
-      <InputAndFeedback modelKey='address.state' label='State'/>
-      <InputAndFeedback modelKey='address.zip' label='Zip'/>
+      <InputAndFeedback name='address.line1' label='Line 1'/>
+      <InputAndFeedback name='address.line2' label='Line 2'/>
+      <InputAndFeedback name='address.city' label='City'/>
+      <InputAndFeedback name='address.state' label='State'/>
+      <InputAndFeedback name='address.zip' label='Zip'/>
       {restOfForm}
     </FormScope>
   </Form>
@@ -254,11 +254,11 @@ return (
   <Form>
     <FormScope formstate={formstate} form={form}>
       <FormScope name='address'>
-        <InputAndFeedback modelKey='line1' label='Line 1'/>
-        <InputAndFeedback modelKey='line2' label='Line 2'/>
-        <InputAndFeedback modelKey='city' label='City'/>
-        <InputAndFeedback modelKey='state' label='State'/>
-        <InputAndFeedback modelKey='zip' label='Zip'/>
+        <InputAndFeedback name='line1' label='Line 1'/>
+        <InputAndFeedback name='line2' label='Line 2'/>
+        <InputAndFeedback name='city' label='City'/>
+        <InputAndFeedback name='state' label='State'/>
+        <InputAndFeedback name='zip' label='Zip'/>
       </FormScope>
       {restOfForm}
     </FormScope>
@@ -272,11 +272,11 @@ You can create a reusable nested form for an address:
 function Address({formstate, form}) {
   return (
     <FormScope formstate={formstate} form={form}>
-      <InputAndFeedback modelKey='line1' label='Line 1'/>
-      <InputAndFeedback modelKey='line2' label='Line 2'/>
-      <InputAndFeedback modelKey='city' label='City'/>
-      <InputAndFeedback modelKey='state' label='State'/>
-      <InputAndFeedback modelKey='zip' label='Zip'/>
+      <InputAndFeedback name='line1' label='Line 1'/>
+      <InputAndFeedback name='line2' label='Line 2'/>
+      <InputAndFeedback name='city' label='City'/>
+      <InputAndFeedback name='state' label='State'/>
+      <InputAndFeedback name='zip' label='Zip'/>
     </FormScope>
   );
 }
@@ -286,7 +286,7 @@ function Address({formstate, form}) {
 return (
   <Form>
     <FormScope formstate={formstate} form={form}>
-      <InputAndFeedback modelKey='name' label='Name'/>
+      <InputAndFeedback name='name' label='Name'/>
       <FormScope name='homeAddress'/>
         <Address nestedForm/>
       </FormScope>
@@ -316,11 +316,11 @@ return (
   <Form>
     <FormScope name='address' formstate={formstate} form={form}>
       <Address nestedForm>
-        <InputAndFeedback modelKey='line1' label='Line 1'/>
-        <InputAndFeedback modelKey='line2' label='Line 2'/>
-        <InputAndFeedback modelKey='city' label='City'/>
-        <InputAndFeedback modelKey='state' label='State'/>
-        <InputAndFeedback modelKey='zip' label='Zip'/>
+        <InputAndFeedback name='line1' label='Line 1'/>
+        <InputAndFeedback name='line2' label='Line 2'/>
+        <InputAndFeedback name='city' label='City'/>
+        <InputAndFeedback name='state' label='State'/>
+        <InputAndFeedback name='zip' label='Zip'/>
       </Address>
       {restOfForm}
     </FormScope>

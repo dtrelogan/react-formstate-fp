@@ -30,18 +30,26 @@ const validationSchema = {
   }
 };
 
-const initialFormstate = rff.initializeFormstate(initialModel, validationSchema);
-
 
 export default function ExampleForm()
 {
-  const [formstate, setFormstate] = useState(initialFormstate);
+  const [formstate, setFormstate] = useState(() => rff.initializeFormstate(initialModel, validationSchema));
 
   const form = {
     setFormstate, // Tell react-formstate-fp how to update your formstate.
     adaptors: [InputAndFeedback], // Pass formstate, form (and modelKey) props to this component.
     calculatePrimed: rff.primeOnChange // Tell the InputAndFeedback component when to show messages.
   };
+
+  // alternatively:
+
+  // const [formstate, form] = useFormstate(
+  //   () => rff.initializeFormstate(initialModel, validationSchema),
+  //   {
+  //     adaptors: [InputAndFeedback],
+  //     calculatePrimed: rff.primeOnChange
+  //   }
+  // );
 
   const submitting = rff.isFormSubmitting(formstate);
   const disabled = submitting || rff.isPrimedModelInvalid(formstate, form.calculatePrimed);
@@ -50,9 +58,9 @@ export default function ExampleForm()
     <form onSubmit={(e) => submit(e, form)}>
       <Spinner visible={submitting}/>
       <FormScope formstate={formstate} form={form}>
-        <InputAndFeedback modelKey='oldPassword' type='password' label='Old Password'/>
-        <InputAndFeedback modelKey='newPassword' type='password' label='New Password'/>
-        <InputAndFeedback modelKey='confirmNewPassword' type='password' label='Confirm New Password'/>
+        <InputAndFeedback name='oldPassword' type='password' label='Old Password'/>
+        <InputAndFeedback name='newPassword' type='password' label='New Password'/>
+        <InputAndFeedback name='confirmNewPassword' type='password' label='Confirm New Password'/>
       </FormScope>
       <input type='submit' value='Submit' disabled={disabled}/>
     </form>

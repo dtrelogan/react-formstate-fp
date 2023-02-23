@@ -23,6 +23,8 @@ npm install --save react-formstate-fp
 ## Examples and documentation
 
 - [Basic example](/doc/BasicExample.md)
+- [Typescript example](/doc/Typescript.md)
+- [How is this better than raw React?](/doc/Why.md)
 - [Why the departure from react-formstate?](/doc/WhyTheFpBranch.md)
 - [Initialization](/doc/Initialization.md)
 - [Binding inputs to formstate](/doc/Binding.md)
@@ -47,5 +49,6 @@ Basically no dependencies other than React.
 
 - Assumes an es5 environment (for example: Object.keys and Array.isArray).
 - Assumes es6 promises. (This is the only polyfill requirement beyond es5.)
+- Works with Typescript.
 
 Thanks for your interest!

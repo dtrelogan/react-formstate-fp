@@ -164,7 +164,7 @@ if (model.addresses.length > 0) {
   addressesSection = model.addresses.map((v, i) => {
     return (
       <FormScope key={i} name={i} validate={validateAddress}>
-        <InputAndFeedback modelKey='line1' label='Line 1'/>
+        <InputAndFeedback name='line1' label='Line 1'/>
       </FormScope>
     );
   });
@@ -226,7 +226,7 @@ In the Address component:
 
 ```jsx
 <FormScope formstate={formstate} form={form} validate={validateAddress}>
-  <InputAndFeedback modelKey='line1' label='Line 1'/>
+  <InputAndFeedback name='line1' label='Line 1'/>
 </FormScope>
 ```
 

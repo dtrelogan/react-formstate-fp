@@ -3,6 +3,42 @@ import { exists, hasProp, isNonEmptyString, addScope, normalizeModelKey } from '
 import { convertToRootModelKey, getId, isScope, buildValidationSchema, createNestedScope } from './schemaAndLookup.js';
 
 
+//
+// create RffAdaptor (to make TypeScript happy)
+//
+
+
+// typescript version
+//
+// export function createRffAdaptor<Props, Model>(
+//   Component: React.FunctionComponent<Props & RffProps<Model>>
+// ): React.FunctionComponent<Props & FormFieldName>
+// {
+//   return (props) => {
+//       // rff used React.mapChildren to add form, formstate, and modelKey to render props
+//       // have to do some casting to keep typescript happy...
+//       const { form, formstate, modelKey, ...other } = props as Props & RffProps<Model>;
+//       const unadaptedProps = (other as unknown) as Props;
+//       return <Component form={form} formstate={formstate} modelKey={modelKey} {...unadaptedProps}/>;
+//   };
+// };
+
+
+
+// javascript version
+//
+// Because this isn't typescript, you don't have to do any casting.
+// Despite appearances this function does accomplish something.
+// It's the typescript type signature for this function that does the work.
+export function createRffAdaptor(Component) {
+  return Component;
+}
+
+export function createRffNestedFormAdaptor(Component) {
+  return Component;
+}
+
+
 
 //
 // useFormstate
@@ -269,7 +305,10 @@ function addProps(formstate, form, activeModelKey, element) {
 
         let modelKey = activeModelKey;
 
-        if (hasProp(element.props, 'modelKey')) {
+        if (hasProp(element.props, 'name')) { // as of version 1.2 prefer name prop for adaptors
+          modelKey = normalizeModelKey(element.props.name);
+        }
+        else if (hasProp(element.props, 'modelKey')) {
           modelKey = normalizeModelKey(element.props.modelKey);
         }
 

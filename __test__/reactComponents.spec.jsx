@@ -404,7 +404,7 @@ describe('FormScope', () => {
     render(Test);
     expect(called).toBe(true);
   });
-  test('adaptors can be passed modelKey', () => {
+  test('adaptors can be passed name (or modelKey)', () => {
     let fs, form;
     let called1 = false;
     function Adaptor1({formstate, modelKey, form}) {
@@ -422,21 +422,31 @@ describe('FormScope', () => {
       expect(typeof(form.setFormstate)).toBe('function');
       return null;
     }
+    let called3 = false;
+    function Adaptor3({formstate, modelKey, form}) {
+      called3 = true;
+      expect(formstate.nestedScopeId).toBe(null);
+      expect(modelKey).toBe('address.line3');
+      expect(typeof(form.setFormstate)).toBe('function');
+      return null;
+    }
     function Test() {
-      fs = rff.initializeFormstate({address: {line1: '', line2: ''}});
-      form = { setFormstate: (f) => { fs = f(fs); }, adaptors: [Adaptor1, Adaptor2] };
+      fs = rff.initializeFormstate({address: {line1: '', line2: '', line3: ''}});
+      form = { setFormstate: (f) => { fs = f(fs); }, adaptors: [Adaptor1, Adaptor2, Adaptor3] };
       return (
         <FormScope formstate={fs} form={form}>
-          <Adaptor1 modelKey='address.line1'/>
+          <Adaptor1 name='address.line1'/>
           <Adaptor2 modelKey='address.line2'/>
+          <Adaptor3 modelKey='thisGetsIgnored' name='address.line3'/>
         </FormScope>
       );
     }
     render(Test);
     expect(called1).toBe(true);
     expect(called2).toBe(true);
+    expect(called3).toBe(true);
   });
-  test('modelKeys passed to adaptors are normalized', () => {
+  test('names passed to adaptors are normalized', () => {
     let fs, form;
     let called1 = false;
     function Adaptor1({formstate, modelKey, form}) {
@@ -459,7 +469,7 @@ describe('FormScope', () => {
       form = { setFormstate: (f) => { fs = f(fs); }, adaptors: [Adaptor1, Adaptor2] };
       return (
         <FormScope formstate={fs} form={form}>
-          <Adaptor1 modelKey='address[line1]'/>
+          <Adaptor1 name='address[line1]'/>
           <Adaptor2 modelKey='[address][line2]'/>
         </FormScope>
       );

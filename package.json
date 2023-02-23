@@ -1,6 +1,6 @@
 {
   "name": "react-formstate-fp",
-  "version": "1.0.1",
+  "version": "1.2.0",
   "description": "An API to build, query, update, and bind formstate in React. Develop forms DRYly in React.",
   "main": "./lib/index.js",
   "module": "./src/index.js",
@@ -8,10 +8,11 @@
     "/lib",
     "/src"
   ],
+  "types": "./contract/api/index.d.ts",
   "scripts": {
-    "build": "babel src --out-dir lib",
+    "build": "npx babel src --out-dir lib",
     "pretest": "npm run build",
-    "localtest": "jest",
+    "localtest": "npx jest",
     "prelocaltest": "npm run build",
     "prepublishOnly": "npm run localtest"
   },
@@ -34,7 +35,7 @@
           "helpers": true,
           "regenerator": false,
           "useESModules": false,
-          "version": "^7.7.5"
+          "version": "^7.17.8"
         }
       ]
     ]
@@ -59,21 +60,19 @@
     "url": "https://github.com/dtrelogan/react-formstate-fp/issues"
   },
   "homepage": "https://github.com/dtrelogan/react-formstate-fp#readme",
-  "peerDependencies": {
-    "react": ">=16.8.0"
-  },
   "devDependencies": {
-    "@babel/cli": "^7.7.5",
-    "@babel/core": "^7.7.5",
-    "@babel/plugin-transform-runtime": "^7.7.5",
-    "@babel/preset-env": "^7.7.5",
-    "@babel/preset-react": "^7.8.3",
-    "eslint": "^6.8.0",
-    "jest": "^25.1.0",
-    "react": "^16.12.0",
-    "react-dom": "^16.13.0"
+    "@babel/cli": "^7.17.6",
+    "@babel/core": "^7.17.8",
+    "@babel/plugin-transform-runtime": "^7.17.0",
+    "@babel/preset-env": "^7.16.11",
+    "@babel/preset-react": "^7.16.7",
+    "@types/react": "^17.0.24",
+    "eslint": "^8.12.0",
+    "jest": "^27.5.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
   },
   "dependencies": {
-    "@babel/runtime": "^7.7.5"
+    "@babel/runtime": "^7.17.8"
   }
 }
