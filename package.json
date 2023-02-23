@@ -1,6 +1,6 @@
 {
   "name": "react-formstate-fp",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "An API to build, query, update, and bind formstate in React. Develop forms DRYly in React.",
   "main": "./lib/index.js",
   "module": "./src/index.js",
